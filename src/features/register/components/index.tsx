@@ -35,6 +35,7 @@ const schema = yup.object().shape({
     .string()
     .matches(/^[6-9]{1}[0-9]+/, "Invalid mobile number")
     .min(10, "Please enter 10 digit phone number!")
+    .max(10, "Please enter maximum 10 digit phone number!")
     .required("Please enter a phone number!"),
   password: yup.string().trim().required("Please enter a password!"),
   cpassword: yup
