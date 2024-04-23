@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import * as React from "react";
@@ -28,6 +29,8 @@ import logo from "@/layout/assets/icon.svg";
 
 import routes from "@/layout/components/routes";
 
+import nookies, { destroyCookie } from "nookies";
+
 const drawerWidth = 240;
 
 function NavBar() {
@@ -36,6 +39,14 @@ function NavBar() {
   const handleDrawerToggle = () => {
     setMobileOpen(prevState => !prevState);
   };
+
+  const [isToken, setIsToken] = React.useState(false);
+
+  React.useEffect(() => {
+    if (nookies.get(null)?.tastebites) {
+      setIsToken(true);
+    }
+  }, [JSON.stringify(nookies.get(null).tastebites)]);
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -56,15 +67,30 @@ function NavBar() {
           ))}
         </List>
       </Box>
-      <Link href="/login">
+      {isToken ? (
         <Button
           color="primary"
           sx={{ fontWeight: 600, mt: "auto" }}
           variant="contained"
+          onClick={() => {
+            destroyCookie(null, "user", { path: "/" });
+            destroyCookie(null, "tastebites", { path: "/" });
+            window.location.href = "/login";
+          }}
         >
-          Login / Register
+          Logout
         </Button>
-      </Link>
+      ) : (
+        <Link href="/login">
+          <Button
+            color="primary"
+            sx={{ fontWeight: 600, mt: "auto" }}
+            variant="contained"
+          >
+            Login / Register
+          </Button>
+        </Link>
+      )}
     </Box>
   );
 
@@ -109,15 +135,30 @@ function NavBar() {
                     </Button>
                   </Link>
                 ))}
-                <Link href="/login">
+                {isToken ? (
                   <Button
                     color="primary"
-                    sx={{ fontWeight: 600 }}
+                    sx={{ fontWeight: 600, mt: "auto" }}
                     variant="contained"
+                    onClick={() => {
+                      destroyCookie(null, "user", { path: "/" });
+                      destroyCookie(null, "tastebites", { path: "/" });
+                      window.location.href = "/login";
+                    }}
                   >
-                    Login / Register
+                    Logout
                   </Button>
-                </Link>
+                ) : (
+                  <Link href="/login">
+                    <Button
+                      color="primary"
+                      sx={{ fontWeight: 600, mt: "auto" }}
+                      variant="contained"
+                    >
+                      Login / Register
+                    </Button>
+                  </Link>
+                )}
               </Stack>
             </Toolbar>
           </Grid>
@@ -139,7 +180,7 @@ function NavBar() {
             }
           }}
         >
-          {drawer}
+          {mobileOpen ? drawer : ""}
         </Drawer>
       </nav>
     </>
