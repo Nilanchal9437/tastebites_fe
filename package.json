@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "cp .env.example.devlopment .env && next dev",
+    "build-dev": "cp .env.example.staging .env && next build",
     "build": "cp .env.example.staging .env && next build",
     "start": "next start",
     "lint": "next lint"
